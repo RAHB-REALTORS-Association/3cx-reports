@@ -1,21 +1,46 @@
 import Papa from "papaparse";
 import { hmsToSeconds, pctToFloat } from "./formatters";
 
+// New function for Agent Login History report
+function parseAgentLoginHistory(rows) {
+  const out = [];
+  let currentAgent = null;
+
+  for (const row of rows) {
+    // Agent name is in the first column, e.g., "222 Maria Kovljenic"
+    const agentMatch = /^\d+\s+(.*)/.exec(row[0]);
+    if (agentMatch) {
+      currentAgent = agentMatch[1].trim();
+    }
+
+    // Total line contains the total logged in time
+    if (row[0] && row[0].trim() === "Total:" && currentAgent) {
+      const loggedInTimeHms = row[5];
+      if (loggedInTimeHms) {
+        out.push({
+          Agent: currentAgent,
+          "Total Logged in Time (s)": hmsToSeconds(loggedInTimeHms),
+        });
+      }
+      currentAgent = null; // Reset for next agent
+    }
+  }
+  return out;
+}
+
 function findHeaderRow(rows) {
   // Look for a row whose first cell is exactly "Agent"
   for (let i = 0; i < rows.length; i++) {
     if (String(rows[i][0]).trim() === "Agent") return i;
   }
-  return 4; // fallback similar to the Python script
+  return -1; // fallback similar to the Python script
 }
 
-export function parseCSVContent(content, filename) {
-  const parsed = Papa.parse(content, {
-    delimiter: ",",
-    skipEmptyLines: "greedy",
-  });
-  const rows = parsed.data;
+// Refactored function for the original Agent Performance report
+function parseAgentPerformance(rows) {
   const headerRowIndex = findHeaderRow(rows);
+  if (headerRowIndex === -1) return []; // Not a performance report
+
   const header = rows[headerRowIndex];
   const body = rows.slice(headerRowIndex + 1);
   // Map headers to standard names like the python version
@@ -68,6 +93,27 @@ export function parseCSVContent(content, filename) {
     }
     out.push(rec);
   }
+  return out;
+}
+
+export function parseCSVContent(content, filename) {
+  const parsed = Papa.parse(content, {
+    delimiter: ",",
+    skipEmptyLines: "greedy",
+  });
+  const rows = parsed.data;
+
+  let reportType = "performance"; // default
+  let dataRows = [];
+
+  // Determine report type
+  if (rows.length > 0 && rows[0][0].includes("Queue Agent Logins")) {
+    reportType = "login";
+    dataRows = parseAgentLoginHistory(rows);
+  } else {
+    dataRows = parseAgentPerformance(rows);
+  }
+
   // Try to infer date from filename (YYYY-MM-DD, DDMM, or Jul 7 2025 etc.)
   let date = null;
   const f = filename || "";
@@ -121,5 +167,9 @@ export function parseCSVContent(content, filename) {
       );
     }
   }
-  return { rows: out, dateHint: date ? date.toISOString().slice(0, 10) : null };
+  return {
+    rows: dataRows,
+    type: reportType,
+    dateHint: date ? date.toISOString().slice(0, 10) : null,
+  };
 }

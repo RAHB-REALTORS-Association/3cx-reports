@@ -29,11 +29,27 @@ export function build(range) {
   }
 
   const fs = filesInRange(range);
-  const allRows = fs.flatMap((f) => f.rows);
 
-  // aggregate by Agent
+  // Process login reports first to get accurate login times
+  const loginTimeByAgent = new Map();
+  const loginFiles = fs.filter((f) => f.type === "login");
+  for (const file of loginFiles) {
+    for (const row of file.rows) {
+      const agent = row.Agent || "Unknown";
+      const existing = loginTimeByAgent.get(agent) || 0;
+      loginTimeByAgent.set(
+        agent,
+        existing + (row["Total Logged in Time (s)"] || 0)
+      );
+    }
+  }
+
+  // Process performance reports
   const byAgent = new Map();
-  for (const r of allRows) {
+  const perfFiles = fs.filter((f) => f.type === "performance" || !f.type); // !f.type for backwards compat
+  const allPerfRows = perfFiles.flatMap((f) => f.rows);
+
+  for (const r of allPerfRows) {
     const key = r.Agent || "Unknown";
     const acc = byAgent.get(key) || {
       Agent: key,
@@ -43,10 +59,30 @@ export function build(range) {
       Talk: 0,
     };
     acc.Calls += Number(r["Calls Answered"] || 0);
-    acc.Logged += Number(r["Total Logged in Time (s)"] || 0);
+    // Use performance report logged in time only if no login report is available
+    if (!loginTimeByAgent.has(key)) {
+      acc.Logged += Number(r["Total Logged in Time (s)"] || 0);
+    }
     acc.Ring += Number(r["Ring Time (s)"] || 0);
     acc.Talk += Number(r["Talk Time (s)"] || 0);
     byAgent.set(key, acc);
+  }
+
+  // Add agent data from login reports, ensuring they appear in the table
+  // even if they have no performance data.
+  for (const [agent, loggedTime] of loginTimeByAgent.entries()) {
+    if (!byAgent.has(agent)) {
+      byAgent.set(agent, {
+        Agent: agent,
+        Calls: 0,
+        Logged: loggedTime,
+        Ring: 0,
+        Talk: 0,
+      });
+    } else {
+      // If agent exists, just update the logged in time.
+      byAgent.get(agent).Logged = loggedTime;
+    }
   }
 
   const table = Array.from(byAgent.values())
