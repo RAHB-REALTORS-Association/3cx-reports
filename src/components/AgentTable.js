@@ -1,7 +1,43 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { fmtNum, fmt1 } from "../utils/formatters";
 
 const AgentTable = ({ tableData, meta, kpis }) => {
+  const [sortConfig, setSortConfig] = useState({
+    key: "agent",
+    direction: "ascending",
+  });
+
+  const sortedTableData = useMemo(() => {
+    let sortableItems = [...tableData];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [tableData, sortConfig]);
+
+  const requestSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getClassNamesFor = (name) => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === name ? sortConfig.direction : undefined;
+  };
+
   return (
     <section className="card table-card">
       <div
@@ -24,16 +60,46 @@ const AgentTable = ({ tableData, meta, kpis }) => {
         <table>
           <thead>
             <tr>
-              <th>Agent</th>
-              <th>Calls</th>
-              <th>Logged In</th>
-              <th>Answered / Hour</th>
-              <th>Mean Ring</th>
-              <th>Mean Talk</th>
+              <th
+                onClick={() => requestSort("agent")}
+                className={getClassNamesFor("agent")}
+              >
+                Agent
+              </th>
+              <th
+                onClick={() => requestSort("calls")}
+                className={getClassNamesFor("calls")}
+              >
+                Calls
+              </th>
+              <th
+                onClick={() => requestSort("logged_in")}
+                className={getClassNamesFor("logged_in")}
+              >
+                Logged In
+              </th>
+              <th
+                onClick={() => requestSort("ans_per_hour")}
+                className={getClassNamesFor("ans_per_hour")}
+              >
+                Answered / Hour
+              </th>
+              <th
+                onClick={() => requestSort("mean_ring")}
+                className={getClassNamesFor("mean_ring")}
+              >
+                Mean Ring
+              </th>
+              <th
+                onClick={() => requestSort("mean_talk")}
+                className={getClassNamesFor("mean_talk")}
+              >
+                Mean Talk
+              </th>
             </tr>
           </thead>
           <tbody>
-            {tableData.map((r) => (
+            {sortedTableData.map((r) => (
               <tr key={r.agent}>
                 <td>{r.agent}</td>
                 <td>{fmtNum(r.calls)}</td>
