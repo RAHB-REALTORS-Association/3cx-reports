@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# 📞 3CX Call Reports Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Available Scripts
+A comprehensive web application for analyzing and visualizing 3CX call system data. Upload CSV reports and get instant insights into call patterns, agent performance, and key metrics through interactive charts and detailed analytics.
 
-In the project directory, you can run:
+## ✨ Key Features
+
+* **Drag & Drop CSV Upload** — Easily import your 3CX call reports
+* **Interactive Visualizations** — Includes:
+  * Bar charts for call volume analysis
+  * KPI grids for quick metrics overview
+  * Agent performance tables
+* **Dynamic Filtering** — Filter data by:
+  * Date ranges
+  * Call types
+  * Agent performance
+* **Real-time Analytics** — Instant calculations for:
+  * Call volumes
+  * Average call duration
+  * Agent statistics
+* **Responsive Design** — Works seamlessly across desktop, tablet, and mobile devices
+
+## 🚀 Getting Started
+
+### Requirements
+
+* Node.js v14+
+* npm or yarn
+
+### Installation Steps
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/RAHB-REALTORS-Association/3cx-reports.git
+   cd 3cx-reports
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server**
+
+   ```bash
+   npm start
+   ```
+
+4. Open your browser at [http://localhost:3000](http://localhost:3000)
+
+### 🐳 Docker Deployment
+
+You can also run the application using Docker:
+
+1. **Build the Docker image**
+
+   ```bash
+   docker build -t 3cx-reports .
+   ```
+
+2. **Run the container**
+
+   ```bash
+   docker run -p 80:80 3cx-reports
+   ```
+
+3. Open your browser at [http://localhost](http://localhost)
+
+## 🛠️ How to Use
+
+1. **Upload Your Data**
+   * Drag and drop your 3CX CSV report file into the upload zone
+   * Supported formats: CSV files from 3CX call reports
+
+2. **Explore Your Data**
+   * View agent performance metrics in the sortable table
+   * Analyze call patterns with interactive bar charts
+   * Monitor KPIs in the summary grid
+
+3. **Filter and Analyze**
+   * Use date range controls to focus on specific periods
+   * Apply filters to drill down into specific data segments
+
+## 📊 Components Overview
+
+* **AgentTable** — Sortable table displaying agent performance metrics
+* **BarChart** — Interactive bar charts for call volume visualization
+* **ChartGrid** — Grid layout for multiple chart displays
+* **Controls** — Data filtering and control panel
+* **KpiGrid** — Key performance indicators dashboard
+* **Dropzone** — File upload interface with drag-and-drop support
+
+## 🔧 Available Scripts
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000)
 
 ### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode
 
 ### `npm run build`
+Builds the app for production to the `build` folder
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🌍 Deployment Options
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Deploy to any static hosting provider:
+* Vercel
+* Netlify
+* GitHub Pages
+* AWS S3 + CloudFront
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🤝 Contributing
 
-### `npm run eject`
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🙌 Built With
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* **React** — Frontend framework
+* **Create React App** — Build toolchain
+* **Modern JavaScript** — ES6+ features
+* **CSS3** — Responsive styling
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📄 License
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
