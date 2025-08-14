@@ -47,6 +47,20 @@ export function build(range) {
   const fs = filesInRange(range);
   const allRows = fs.flatMap((f) => f.rows);
 
+  // Check if any files extend beyond the selected range
+  const dateRangeWarnings = [];
+  fs.forEach((f) => {
+    if (f.dateRange && f.dateRange.from && f.dateRange.to) {
+      if (f.dateRange.from < range.from || f.dateRange.to > range.to) {
+        dateRangeWarnings.push({
+          filename: f.name,
+          fileRange: f.dateRange,
+          selectedRange: range
+        });
+      }
+    }
+  });
+
   // aggregate by Agent
   const byAgent = new Map();
   for (const r of allRows) {
@@ -112,8 +126,11 @@ export function build(range) {
       files: fs.map((f) => ({
         name: f.name,
         date: f.date,
+        dateRange: f.dateRange,
         rows: f.rows.length,
       })),
+      dateRangeWarnings, // Include warnings about files that extend beyond selected range
+      selectedRange: range,
     },
   };
 
