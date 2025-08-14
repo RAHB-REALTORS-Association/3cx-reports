@@ -10,10 +10,14 @@ describe('3CX Reports Dashboard', () => {
 
   test('renders date controls', () => {
     render(<App />);
-    const fromDateLabel = screen.getByText(/from/i);
-    const toDateLabel = screen.getByText(/to/i);
-    expect(fromDateLabel).toBeInTheDocument();
-    expect(toDateLabel).toBeInTheDocument();
+    // Check for date input fields by their specific attributes
+    const fromDateInput = screen.getByRole('textbox', { name: /from/i });
+    const toDateInput = screen.getByRole('textbox', { name: /to/i });
+    
+    expect(fromDateInput).toBeInTheDocument();
+    expect(toDateInput).toBeInTheDocument();
+    expect(fromDateInput).toHaveAttribute('type', 'date');
+    expect(toDateInput).toHaveAttribute('type', 'date');
   });
 
   test('renders quick date buttons', () => {
