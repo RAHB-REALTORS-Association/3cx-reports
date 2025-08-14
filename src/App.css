@@ -121,6 +121,11 @@
       color: var(--text-secondary);
     }
     
+    .footer strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+    
     .footer-link {
       color: var(--accent);
       text-decoration: none;

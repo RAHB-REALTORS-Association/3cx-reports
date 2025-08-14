@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="footer">
       <p>
-        Made with AI by{" "}
+        Made with <strong>AI</strong> by{" "}
         <a 
           href="https://www.cornerstone.inc" 
           target="_blank" 
