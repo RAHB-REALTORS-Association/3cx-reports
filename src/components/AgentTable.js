@@ -11,10 +11,25 @@ const AgentTable = ({ tableData, meta, kpis }) => {
     let sortableItems = [...tableData];
     if (sortConfig !== null) {
       sortableItems.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
+        let aVal = a[sortConfig.key];
+        let bVal = b[sortConfig.key];
+        
+        // Use raw seconds values for time-based sorting
+        if (sortConfig.key === "logged_in") {
+          aVal = a.logged_in_seconds;
+          bVal = b.logged_in_seconds;
+        } else if (sortConfig.key === "mean_ring") {
+          aVal = a.mean_ring_seconds;
+          bVal = b.mean_ring_seconds;
+        } else if (sortConfig.key === "mean_talk") {
+          aVal = a.mean_talk_seconds;
+          bVal = b.mean_talk_seconds;
+        }
+        
+        if (aVal < bVal) {
           return sortConfig.direction === "ascending" ? -1 : 1;
         }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
+        if (aVal > bVal) {
           return sortConfig.direction === "ascending" ? 1 : -1;
         }
         return 0;

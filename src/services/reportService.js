@@ -101,9 +101,12 @@ export function build(range, selectedQueues = null) {
         agent: x.Agent,
         calls: x.Calls,
         logged_in: secondsToHMS(x.Logged),
+        logged_in_seconds: x.Logged, // Raw seconds for sorting
         ans_per_hour: ansPerHour,
         mean_ring: secondsToHMS(meanRing),
+        mean_ring_seconds: meanRing, // Raw seconds for sorting
         mean_talk: secondsToHMS(meanTalk),
+        mean_talk_seconds: meanTalk, // Raw seconds for sorting
       };
     })
     .sort((a, b) => b.calls - a.calls);
