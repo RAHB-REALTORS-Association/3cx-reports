@@ -1,65 +1,65 @@
 import React from "react";
 
-const QueueFilter = ({ availableQueues, selectedQueues, onQueueToggle }) => {
-  if (!availableQueues || availableQueues.length === 0) {
+const AgentFilter = ({ availableAgents, selectedAgents, onAgentToggle }) => {
+  if (!availableAgents || availableAgents.length === 0) {
     return null;
   }
 
-  const handleToggle = (queue) => {
-    onQueueToggle(queue);
+  const handleToggle = (agent) => {
+    onAgentToggle(agent);
   };
 
   const handleSelectAll = () => {
-    onQueueToggle(null, 'all');
+    onAgentToggle(null, 'all');
   };
 
   const handleSelectNone = () => {
-    onQueueToggle(null, 'none');
+    onAgentToggle(null, 'none');
   };
 
-  const allSelected = selectedQueues.length === 0 || selectedQueues.length === availableQueues.length;
-  const someSelected = selectedQueues.length > 0 && selectedQueues.length < availableQueues.length;
+  const allSelected = selectedAgents.length === 0 || selectedAgents.length === availableAgents.length;
+  const someSelected = selectedAgents.length > 0 && selectedAgents.length < availableAgents.length;
 
   return (
     <div className="card">
-      <div className="queue-filter">
+      <div className="agent-filter">
         <div className="filter-header">
-          <h3>Queue Filter</h3>
+          <h3>Agent Filter</h3>
           <div className="filter-actions">
             <button 
               className={`btn ghost ${allSelected ? 'active' : ''}`}
               onClick={handleSelectAll}
-              title="Show all queues"
+              title="Show all agents"
             >
               All
             </button>
             <button 
               className="btn ghost"
               onClick={handleSelectNone}
-              title="Hide all queues"
+              title="Hide all agents"
             >
               None
             </button>
           </div>
         </div>
         <div className="filter-pills">
-          {availableQueues.map((queue) => {
-            const isSelected = selectedQueues.length === 0 || selectedQueues.includes(queue);
+          {availableAgents.map((agent) => {
+            const isSelected = selectedAgents.length === 0 || selectedAgents.includes(agent);
             return (
               <button
-                key={queue}
+                key={agent}
                 className={`pill filter-pill ${isSelected ? 'selected' : 'unselected'}`}
-                onClick={() => handleToggle(queue)}
-                title={`Toggle ${queue}`}
+                onClick={() => handleToggle(agent)}
+                title={`Toggle ${agent}`}
               >
-                {queue}
+                {agent}
               </button>
             );
           })}
         </div>
         {someSelected && (
           <div className="filter-summary">
-            Showing {selectedQueues.length} of {availableQueues.length} queues
+            Showing {selectedAgents.length} of {availableAgents.length} agents
           </div>
         )}
       </div>
@@ -67,4 +67,4 @@ const QueueFilter = ({ availableQueues, selectedQueues, onQueueToggle }) => {
   );
 };
 
-export default QueueFilter;
+export default AgentFilter;

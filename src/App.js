@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import Controls from "./components/Controls";
@@ -6,6 +6,7 @@ import KpiGrid from "./components/KpiGrid";
 import ChartGrid from "./components/ChartGrid";
 import AgentTable from "./components/AgentTable";
 import QueueFilter from "./components/QueueFilter";
+import AgentFilter from "./components/AgentFilter";
 import Footer from "./components/Footer";
 import { listFiles, storeFiles, updateFileDate } from "./utils/dataStore";
 import { build } from "./services/reportService";
@@ -16,6 +17,7 @@ function App() {
   const [data, setData] = useState(null);
   const [range, setRange] = useState({ from: "", to: "" });
   const [selectedQueues, setSelectedQueues] = useState([]);
+  const [selectedAgents, setSelectedAgents] = useState([]);
   const [promptingFile, setPromptingFile] = useState(null);
 
   const refreshFiles = () => setFiles(listFiles());
@@ -54,7 +56,11 @@ function App() {
       alert("Choose a From and To date first.");
       return;
     }
-    const data = build(range, selectedQueues.length > 0 ? selectedQueues : null);
+    const data = build(
+      range, 
+      selectedQueues.length > 0 ? selectedQueues : null,
+      selectedAgents.length > 0 ? selectedAgents : null
+    );
     if (!data) {
       alert("No files in the selected range. Import CSVs or adjust dates.");
       return;
@@ -109,7 +115,45 @@ function App() {
     
     // Rebuild dashboard with new queue selection
     if (range.from && range.to) {
-      const newData = build(range, newSelectedQueues.length > 0 ? newSelectedQueues : null);
+      const newData = build(
+        range, 
+        newSelectedQueues.length > 0 ? newSelectedQueues : null,
+        selectedAgents.length > 0 ? selectedAgents : null
+      );
+      setData(newData);
+    }
+  };
+
+  const handleAgentToggle = (agent, action) => {
+    let newSelectedAgents;
+    
+    if (action === 'all') {
+      newSelectedAgents = [];
+    } else if (action === 'none') {
+      newSelectedAgents = data?.meta?.availableAgents || [];
+    } else {
+      if (selectedAgents.length === 0) {
+        // If all were selected, start with all except the toggled one
+        const allAgents = data?.meta?.availableAgents || [];
+        newSelectedAgents = allAgents.filter(a => a !== agent);
+      } else if (selectedAgents.includes(agent)) {
+        // Remove the agent
+        newSelectedAgents = selectedAgents.filter(a => a !== agent);
+      } else {
+        // Add the agent
+        newSelectedAgents = [...selectedAgents, agent];
+      }
+    }
+    
+    setSelectedAgents(newSelectedAgents);
+    
+    // Rebuild dashboard with new agent selection
+    if (range.from && range.to) {
+      const newData = build(
+        range, 
+        selectedQueues.length > 0 ? selectedQueues : null,
+        newSelectedAgents.length > 0 ? newSelectedAgents : null
+      );
       setData(newData);
     }
   };
@@ -123,12 +167,23 @@ function App() {
         onBuild={handleBuildDashboard}
         onFilesDrop={handleFilesDrop}
       />
-      {data && data.meta?.availableQueues && (
-        <QueueFilter
-          availableQueues={data.meta.availableQueues}
-          selectedQueues={selectedQueues}
-          onQueueToggle={handleQueueToggle}
-        />
+      {data && (data.meta?.availableQueues || data.meta?.availableAgents) && (
+        <div className="filters-container">
+          {data.meta?.availableQueues && (
+            <QueueFilter
+              availableQueues={data.meta.availableQueues}
+              selectedQueues={selectedQueues}
+              onQueueToggle={handleQueueToggle}
+            />
+          )}
+          {data.meta?.availableAgents && (
+            <AgentFilter
+              availableAgents={data.meta.availableAgents}
+              selectedAgents={selectedAgents}
+              onAgentToggle={handleAgentToggle}
+            />
+          )}
+        </div>
       )}
       {data && (
         <main className="grid" style={{ gridTemplateRows: "auto auto 1fr" }}>
