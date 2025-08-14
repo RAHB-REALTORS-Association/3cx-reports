@@ -37,15 +37,28 @@ function cacheKeyFor(range) {
   return `${range.from}_${range.to}__${simpleHash(sig)}`;
 }
 
-export function build(range) {
-  const cacheKey = cacheKeyFor(range);
+export function build(range, selectedQueues = null) {
+  // Include selected queues in cache key
+  const queueKey = selectedQueues ? selectedQueues.sort().join(',') : 'all';
+  const cacheKey = cacheKeyFor(range) + `_q_${simpleHash(queueKey)}`;
   const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}");
   if (cache[cacheKey]) {
     return cache[cacheKey];
   }
 
   const fs = filesInRange(range);
-  const allRows = fs.flatMap((f) => f.rows);
+  let allRows = fs.flatMap((f) => f.rows);
+
+  // Filter by selected queues if specified
+  if (selectedQueues && selectedQueues.length > 0) {
+    allRows = allRows.filter(row => {
+      const queue = row.Queue || "Unknown";
+      return selectedQueues.includes(queue);
+    });
+  }
+
+  // Extract all available queues for the filter UI
+  const allQueues = [...new Set(fs.flatMap(f => f.rows.map(r => r.Queue || "Unknown")))].sort();
 
   // Check if any files extend beyond the selected range
   const dateRangeWarnings = [];
@@ -131,6 +144,8 @@ export function build(range) {
       })),
       dateRangeWarnings, // Include warnings about files that extend beyond selected range
       selectedRange: range,
+      availableQueues: allQueues,
+      selectedQueues: selectedQueues,
     },
   };
 
