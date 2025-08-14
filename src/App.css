@@ -23,81 +23,79 @@
       font-weight: 500;
     }
     
-    /* Queue Filter */
-    .queue-filter {
+    /* Queue Filter and Agent Filter */
+    .queue-filter, .agent-filter {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
     
-    .queue-filter-header {
+    .filter-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 8px;
     }
     
-    .queue-filter-header h3 {
+    .filter-header h3 {
       margin: 0;
       font-size: 1rem;
       font-weight: 600;
       color: var(--text-primary);
     }
     
-    .queue-filter-actions {
+    .filter-actions {
       display: flex;
       gap: 4px;
     }
     
-    .queue-filter-actions .btn {
+    .filter-actions .btn {
       padding: 4px 8px;
       font-size: 0.875rem;
     }
     
-    .queue-filter-actions .btn.active {
+    .filter-actions .btn.active {
       background-color: var(--accent);
       color: white;
       border-color: var(--accent);
     }
     
-    .queue-list {
+    .filter-pills {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 200px;
-      overflow-y: auto;
+      flex-wrap: wrap;
+      gap: 6px;
     }
     
-    .queue-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 8px;
-      border-radius: 6px;
+    .filter-pill {
       cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-    
-    .queue-item:hover {
-      background-color: var(--border);
-    }
-    
-    .queue-item.selected {
-      background-color: rgba(37, 99, 235, 0.1);
-    }
-    
-    .queue-item input[type="checkbox"] {
-      margin: 0;
-      cursor: pointer;
-    }
-    
-    .queue-name {
       font-size: 0.875rem;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
       color: var(--text-primary);
+      transition: all 0.2s ease;
       user-select: none;
     }
     
-    .queue-filter-summary {
+    .filter-pill:hover {
+      border-color: var(--accent);
+      background-color: rgba(37, 99, 235, 0.1);
+    }
+    
+    .filter-pill.selected {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    
+    .filter-pill.unselected {
+      background-color: var(--border);
+      border-color: var(--border);
+      color: var(--text-secondary);
+    }
+    
+    .filter-summary {
       font-size: 0.75rem;
       color: var(--text-secondary);
       text-align: center;
@@ -215,3 +213,16 @@
     .hidden{display:none !important}
     @media(max-width:1100px){.charts{grid-template-columns:1fr}.grid.kpis{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:640px){.grid.kpis{grid-template-columns:1fr} h1{font-size:1.6rem} .header-actions{gap:8px} .github-link,.dark-mode-toggle{padding:6px}}
+    
+    /* Filters container */
+    .filters-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    
+    @media(max-width: 768px) {
+      .filters-container {
+        grid-template-columns: 1fr;
+      }
+    }

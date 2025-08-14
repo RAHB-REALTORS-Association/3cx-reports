@@ -37,10 +37,11 @@ function cacheKeyFor(range) {
   return `${range.from}_${range.to}__${simpleHash(sig)}`;
 }
 
-export function build(range, selectedQueues = null) {
-  // Include selected queues in cache key
+export function build(range, selectedQueues = null, selectedAgents = null) {
+  // Include selected queues and agents in cache key
   const queueKey = selectedQueues ? selectedQueues.sort().join(',') : 'all';
-  const cacheKey = cacheKeyFor(range) + `_q_${simpleHash(queueKey)}`;
+  const agentKey = selectedAgents ? selectedAgents.sort().join(',') : 'all';
+  const cacheKey = cacheKeyFor(range) + `_q_${simpleHash(queueKey)}_a_${simpleHash(agentKey)}`;
   const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || "{}");
   if (cache[cacheKey]) {
     return cache[cacheKey];
@@ -57,8 +58,17 @@ export function build(range, selectedQueues = null) {
     });
   }
 
-  // Extract all available queues for the filter UI
+  // Filter by selected agents if specified
+  if (selectedAgents && selectedAgents.length > 0) {
+    allRows = allRows.filter(row => {
+      const agent = row.Agent || "Unknown";
+      return selectedAgents.includes(agent);
+    });
+  }
+
+  // Extract all available queues and agents for the filter UI
   const allQueues = [...new Set(fs.flatMap(f => f.rows.map(r => r.Queue || "Unknown")))].sort();
+  const allAgents = [...new Set(fs.flatMap(f => f.rows.map(r => r.Agent || "Unknown")))].sort();
 
   // Check if any files extend beyond the selected range
   const dateRangeWarnings = [];
@@ -149,6 +159,8 @@ export function build(range, selectedQueues = null) {
       selectedRange: range,
       availableQueues: allQueues,
       selectedQueues: selectedQueues,
+      availableAgents: allAgents,
+      selectedAgents: selectedAgents,
     },
   };
 
