@@ -24,12 +24,22 @@ function App() {
   useEffect(() => {
     const ensureRangeDefaults = () => {
       if (files.length > 0) {
-        const dates = files
-          .filter((f) => !!f.date)
-          .map((f) => f.date)
-          .sort();
-        if (dates.length > 0) {
-          setRange({ from: dates[0], to: dates[dates.length - 1] });
+        // Collect all dates from files, including date ranges
+        const allDates = [];
+        
+        files.forEach((f) => {
+          if (f.dateRange && f.dateRange.from && f.dateRange.to) {
+            // File spans multiple days - include both start and end
+            allDates.push(f.dateRange.from, f.dateRange.to);
+          } else if (f.date) {
+            // Single day file
+            allDates.push(f.date);
+          }
+        });
+        
+        if (allDates.length > 0) {
+          const sortedDates = allDates.sort();
+          setRange({ from: sortedDates[0], to: sortedDates[sortedDates.length - 1] });
         }
       }
     };
