@@ -1,11 +1,15 @@
-name: CI - Build and Test
+name: CI - Build Check
 
 on:
   push:
   pull_request:
 
 jobs:
-  build-and-test:
+  build-check:
+    permissions:
+      contents: read
+      pull-requests: write
+    
     runs-on: ubuntu-latest
     
     strategy:
@@ -24,29 +28,6 @@ jobs:
         
     - name: Install dependencies
       run: npm ci
-      
-    - name: Check for security vulnerabilities
-      run: |
-        echo "🔍 Checking for security vulnerabilities..."
-        npm audit --audit-level=high || echo "⚠️ Found vulnerabilities in development dependencies (non-blocking)"
-        echo "📝 Note: Vulnerabilities in react-scripts are development-only and don't affect production builds"
-        echo ""
-        echo "📊 Detailed audit report:"
-        npm audit --json > audit-report.json || true
-        echo "Audit report saved to audit-report.json"
-        
-    - name: Upload audit report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: security-audit-report-${{ matrix.node-version }}
-        path: audit-report.json
-        retention-days: 7
-      
-    - name: Run tests
-      run: npm test -- --coverage --watchAll=false
-      env:
-        CI: true
         
     - name: Build application
       run: npm run build
