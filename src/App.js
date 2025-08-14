@@ -6,6 +6,7 @@ import KpiGrid from "./components/KpiGrid";
 import ChartGrid from "./components/ChartGrid";
 import AgentTable from "./components/AgentTable";
 import QueueFilter from "./components/QueueFilter";
+import Footer from "./components/Footer";
 import { listFiles, storeFiles, updateFileDate } from "./utils/dataStore";
 import { build } from "./services/reportService";
 import DatePromptModal from "./components/DatePromptModal";
@@ -136,6 +137,7 @@ function App() {
           <AgentTable tableData={data.table} meta={data.meta} kpis={data.kpis} />
         </main>
       )}
+      <Footer />
       {promptingFile && (
         <DatePromptModal
           fileName={promptingFile.name}
