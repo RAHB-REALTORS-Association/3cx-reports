@@ -115,8 +115,13 @@ export function parseCSVContent(content, filename) {
   let dateRange = null;
   
   if (csvDateRange) {
-    dateHint = csvDateRange.from; // Use the "from" date as the primary date
-    dateRange = csvDateRange;     // Store the full range for potential future use
+    // For multi-day data, use the "from" date as the primary identifier
+    // but store the full range so the system knows this file spans multiple days
+    dateHint = csvDateRange.from;
+    dateRange = csvDateRange;
+    
+    // If it's a single day, keep the same date for both from/to
+    // If it spans multiple days, the range will be preserved
   } else {
     // Fallback to filename parsing if CSV doesn't contain date info
     const f = filename || "";

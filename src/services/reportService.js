@@ -8,6 +8,16 @@ function filesInRange(range) {
   const files = listFiles();
   return files.filter((f) => {
     if (!f.date) return false;
+    
+    // If file has a dateRange (spans multiple days), check for overlap
+    if (f.dateRange && f.dateRange.from && f.dateRange.to) {
+      // File overlaps with range if:
+      // - File starts before or on range end AND
+      // - File ends after or on range start
+      return f.dateRange.from <= range.to && f.dateRange.to >= range.from;
+    }
+    
+    // Fallback to single date check for legacy files
     return f.date >= range.from && f.date <= range.to;
   });
 }
@@ -15,7 +25,13 @@ function filesInRange(range) {
 function cacheKeyFor(range) {
   const fs = filesInRange(range);
   const sig = fs
-    .map((f) => f.id + ":" + (f.date || ""))
+    .map((f) => {
+      // Include both single date and date range in cache signature
+      const dateInfo = f.dateRange 
+        ? `${f.dateRange.from}-${f.dateRange.to}` 
+        : (f.date || "");
+      return f.id + ":" + dateInfo;
+    })
     .sort()
     .join("|");
   return `${range.from}_${range.to}__${simpleHash(sig)}`;

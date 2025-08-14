@@ -13,7 +13,7 @@ export function storeFiles(files) {
       new Promise((res) => {
         const reader = new FileReader();
         reader.onload = () => {
-          const { rows, dateHint } = parseCSVContent(reader.result, file.name);
+          const { rows, dateHint, dateRange } = parseCSVContent(reader.result, file.name);
           const hash = simpleHash(reader.result + file.name + file.size);
           const entry = {
             id: hash,
@@ -21,6 +21,7 @@ export function storeFiles(files) {
             size: file.size,
             addedAt: Date.now(),
             date: dateHint,
+            dateRange: dateRange, // Store the full date range
             rows,
           };
           db.files = db.files.filter((f) => f.id !== hash); // replace if same hash
