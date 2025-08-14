@@ -41,8 +41,8 @@ const Header = ({ data, range }) => {
       : "";
 
   const title = data
-    ? `Queue Agent Dashboard — ${rangeText}`
-    : "Queue Agent Dashboard";
+    ? `Queue Agent Statistics — ${rangeText}`
+    : "Queue Agent Statistics";
 
   // Check if there are any date range warnings
   const hasDateWarnings = data?.meta?.dateRangeWarnings?.length > 0;
