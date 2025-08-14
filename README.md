@@ -1,6 +1,8 @@
 # 📞 3CX Call Reports Dashboard
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI Build](https://github.com/RAHB-REALTORS-Association/3cx-reports/actions/workflows/ci.yml/badge.svg)](https://github.com/RAHB-REALTORS-Association/3cx-reports/actions/workflows/ci.yml)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
 
 A comprehensive web application for analyzing and visualizing 3CX call system data. Upload CSV reports and get instant insights into call patterns, agent performance, and key metrics through interactive charts and detailed analytics.
 
