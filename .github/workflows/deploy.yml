@@ -38,7 +38,7 @@ jobs:
       run: npm run build
       env:
         # Set the base path for GitHub Pages
-        PUBLIC_URL: /3cx-reports
+        #PUBLIC_URL: /3cx-reports
         
     - name: Setup Pages
       uses: actions/configure-pages@v4
