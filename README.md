@@ -4,6 +4,8 @@
 
 A comprehensive web application for analyzing and visualizing 3CX call system data. Upload CSV reports and get instant insights into call patterns, agent performance, and key metrics through interactive charts and detailed analytics.
 
+![Screenshot](public/qstats-screenshot.png)
+
 ## ✨ Key Features
 
 * **Drag & Drop CSV Upload** — Easily import your 3CX call reports
