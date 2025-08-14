@@ -226,3 +226,121 @@
         grid-template-columns: 1fr;
       }
     }
+    
+    /* File Manager */
+    .file-manager {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .file-manager-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .file-manager-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    
+    .file-manager-summary {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      transition: all 0.2s ease;
+    }
+    
+    .file-item:hover {
+      background: var(--border);
+      border-color: var(--accent);
+    }
+    
+    .file-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .file-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 0.875rem;
+    }
+    
+    .file-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    
+    .file-date, .file-size, .file-added {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .btn-delete {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+    }
+    
+    .btn-delete:hover {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #dc2626;
+    }
+    
+    .dark .btn-delete:hover {
+      background: rgba(220, 38, 38, 0.1);
+      border-color: rgba(220, 38, 38, 0.3);
+      color: #f87171;
+    }
+    
+    @media(max-width: 640px) {
+      .file-details {
+        flex-direction: column;
+        gap: 4px;
+      }
+      
+      .file-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      .btn-delete {
+        align-self: flex-end;
+      }
+    }

@@ -7,6 +7,7 @@ import ChartGrid from "./components/ChartGrid";
 import AgentTable from "./components/AgentTable";
 import QueueFilter from "./components/QueueFilter";
 import AgentFilter from "./components/AgentFilter";
+import FileManager from "./components/FileManager";
 import Footer from "./components/Footer";
 import { listFiles, storeFiles, updateFileDate } from "./utils/dataStore";
 import { build } from "./services/reportService";
@@ -69,9 +70,35 @@ function App() {
   };
 
   const handleFilesDrop = async (newFiles) => {
-    await storeFiles(newFiles);
+    const result = await storeFiles(newFiles);
     const allFiles = listFiles();
     setFiles(allFiles);
+    
+    // Show user feedback about what happened
+    const { summary } = result;
+    let message = '';
+    
+    if (summary.stored.length > 0) {
+      message += `✅ Stored ${summary.stored.length} file(s)\n`;
+    }
+    
+    if (summary.duplicates.length > 0) {
+      message += `⚠️ Skipped ${summary.duplicates.length} duplicate file(s)\n`;
+    }
+    
+    if (summary.overlaps.length > 0) {
+      message += `📅 Found ${summary.overlaps.length} file(s) with overlapping dates\n`;
+    }
+    
+    if (summary.conflicts.length > 0) {
+      message += `⚠️ Found ${summary.conflicts.length} file(s) with potential data conflicts\n`;
+      message += `This may cause double-counting of metrics.\n`;
+    }
+    
+    if (message) {
+      alert(message.trim());
+    }
+    
     const fileToPrompt = allFiles.find((f) => !f.date);
     if (fileToPrompt) {
       setPromptingFile(fileToPrompt);
@@ -166,6 +193,10 @@ function App() {
         setRange={setRange}
         onBuild={handleBuildDashboard}
         onFilesDrop={handleFilesDrop}
+      />
+      <FileManager
+        files={files}
+        onFilesChange={refreshFiles}
       />
       {data && (data.meta?.availableQueues || data.meta?.availableAgents) && (
         <div className="filters-container">
