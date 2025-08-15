@@ -37,7 +37,7 @@ const Sidebar = ({
         
         <div className="sidebar-content">
           <div className="sidebar-section">
-            <h3>Date Range & Build</h3>
+            <h3>Date Range</h3>
             <Controls
               range={range}
               setRange={setRange}
