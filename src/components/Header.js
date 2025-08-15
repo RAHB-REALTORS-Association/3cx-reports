@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Header = ({ data, range }) => {
+const Header = ({ data, range, onSidebarToggle, isSidebarCollapsed }) => {
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -94,6 +94,17 @@ const Header = ({ data, range }) => {
               <path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
             </svg>
           )}
+        </button>
+        <button
+          onClick={onSidebarToggle}
+          className={`sidebar-menu-toggle ${!isSidebarCollapsed ? 'active' : ''}`}
+          title={isSidebarCollapsed ? "Open controls sidebar" : "Close controls sidebar"}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
         </button>
       </div>
     </header>
