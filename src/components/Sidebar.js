@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Controls from "./Controls";
 import FileManager from "./FileManager";
 import QueueFilter from "./QueueFilter";
@@ -15,26 +15,23 @@ const Sidebar = ({
   selectedQueues,
   selectedAgents,
   onQueueToggle,
-  onAgentToggle
+  onAgentToggle,
+  isCollapsed,
+  onToggle
 }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
-
   return (
     <>
       {/* Sidebar */}
       <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
         <div className="sidebar-header">
-          <h2>Controls</h2>
           <button 
-            className="sidebar-toggle"
-            onClick={toggleSidebar}
-            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            className="sidebar-collapse-btn"
+            onClick={onToggle}
+            title="Close sidebar"
           >
-            {isCollapsed ? '◀' : '▶'}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
           </button>
         </div>
         
@@ -87,7 +84,7 @@ const Sidebar = ({
       {!isCollapsed && (
         <div 
           className="sidebar-overlay"
-          onClick={toggleSidebar}
+          onClick={onToggle}
         />
       )}
     </>

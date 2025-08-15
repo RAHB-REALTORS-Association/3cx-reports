@@ -17,6 +17,8 @@ function App() {
   const [selectedQueues, setSelectedQueues] = useState([]);
   const [selectedAgents, setSelectedAgents] = useState([]);
   const [promptingFile, setPromptingFile] = useState(null);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false); // Start open by default
+  const [hasUserToggledSidebar, setHasUserToggledSidebar] = useState(false);
 
   const refreshFiles = () => setFiles(listFiles());
 
@@ -182,8 +184,20 @@ function App() {
     }
   };
 
+  const handleSidebarToggle = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+    setHasUserToggledSidebar(true);
+  };
+
+  // Auto-close sidebar when dashboard is first generated (but only if user hasn't manually toggled)
+  useEffect(() => {
+    if (data && !hasUserToggledSidebar && !isSidebarCollapsed) {
+      setIsSidebarCollapsed(true);
+    }
+  }, [data, hasUserToggledSidebar, isSidebarCollapsed]);
+
   return (
-    <div className="dashboard">
+    <div className={`dashboard ${!isSidebarCollapsed ? 'sidebar-open' : ''}`}>
       <Sidebar
         range={range}
         setRange={setRange}
@@ -196,10 +210,17 @@ function App() {
         selectedAgents={selectedAgents}
         onQueueToggle={handleQueueToggle}
         onAgentToggle={handleAgentToggle}
+        isCollapsed={isSidebarCollapsed}
+        onToggle={handleSidebarToggle}
       />
       
       <div className="main-content">
-        <Header data={data} range={range} />
+        <Header 
+          data={data} 
+          range={range}
+          onSidebarToggle={handleSidebarToggle}
+          isSidebarCollapsed={isSidebarCollapsed}
+        />
         {data && (
           <main className="grid" style={{ gridTemplateRows: "auto auto 1fr" }}>
             <KpiGrid kpis={data.kpis} />
