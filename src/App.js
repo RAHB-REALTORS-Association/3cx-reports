@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header";
-import Controls from "./components/Controls";
+import Sidebar from "./components/Sidebar";
 import KpiGrid from "./components/KpiGrid";
 import ChartGrid from "./components/ChartGrid";
 import AgentTable from "./components/AgentTable";
-import QueueFilter from "./components/QueueFilter";
-import AgentFilter from "./components/AgentFilter";
-import FileManager from "./components/FileManager";
 import Footer from "./components/Footer";
 import { listFiles, storeFiles, updateFileDate } from "./utils/dataStore";
 import { build } from "./services/reportService";
@@ -187,43 +184,32 @@ function App() {
 
   return (
     <div className="dashboard">
-      <Header data={data} range={range} />
-      <Controls
+      <Sidebar
         range={range}
         setRange={setRange}
         onBuild={handleBuildDashboard}
         onFilesDrop={handleFilesDrop}
-      />
-      <FileManager
         files={files}
         onFilesChange={refreshFiles}
+        data={data}
+        selectedQueues={selectedQueues}
+        selectedAgents={selectedAgents}
+        onQueueToggle={handleQueueToggle}
+        onAgentToggle={handleAgentToggle}
       />
-      {data && (data.meta?.availableQueues || data.meta?.availableAgents) && (
-        <div className="filters-container">
-          {data.meta?.availableQueues && (
-            <QueueFilter
-              availableQueues={data.meta.availableQueues}
-              selectedQueues={selectedQueues}
-              onQueueToggle={handleQueueToggle}
-            />
-          )}
-          {data.meta?.availableAgents && (
-            <AgentFilter
-              availableAgents={data.meta.availableAgents}
-              selectedAgents={selectedAgents}
-              onAgentToggle={handleAgentToggle}
-            />
-          )}
-        </div>
-      )}
-      {data && (
-        <main className="grid" style={{ gridTemplateRows: "auto auto 1fr" }}>
-          <KpiGrid kpis={data.kpis} />
-          <ChartGrid data={data} />
-          <AgentTable tableData={data.table} meta={data.meta} kpis={data.kpis} />
-        </main>
-      )}
-      <Footer />
+      
+      <div className="main-content">
+        <Header data={data} range={range} />
+        {data && (
+          <main className="grid" style={{ gridTemplateRows: "auto auto 1fr" }}>
+            <KpiGrid kpis={data.kpis} />
+            <ChartGrid data={data} />
+            <AgentTable tableData={data.table} meta={data.meta} kpis={data.kpis} />
+          </main>
+        )}
+        <Footer />
+      </div>
+      
       {promptingFile && (
         <DatePromptModal
           fileName={promptingFile.name}
